@@ -53,4 +53,7 @@ export default {
     32: 'src/assets/logo.png',
     128: 'src/assets/logo.png',
   },
+  "externally_connectable": {
+    "matches": ["http://localhost:8068/\*"]
+  },
 } as ManifestV3Export

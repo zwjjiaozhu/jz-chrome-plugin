@@ -1,3 +1,10 @@
+import ky from 'ky';
+// import { parseFromString } from 'dom-parser';
+
+// var DOMParser = require('xmldom').DOMParser;
+// var parser = new DOMParser();
+
+// 安装以及更新信号
 chrome.runtime.onInstalled.addListener(async (opt) => {
   // Check if reason is install or update. Eg: opt.reason === 'install' // If extension is installed.
   // opt.reason === 'update' // If extension is updated.
@@ -30,6 +37,8 @@ self.onerror = function (message, source, lineno, colno, error) {
 
 export {}
 
+
+// 右键菜单
 
 chrome.contextMenus.create({
   title: '全文翻译44', //菜单的名称
@@ -66,10 +75,40 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
       // (0,_library_translate_js__WEBPACK_IMPORTED_MODULE_0__.executeGoogleScript)(channel);
       break;
 
-
-
     default:
       break;
   }
 });
 
+
+// 监听其他网页发送过来的请求
+chrome.runtime.onMessageExternal.addListener((message, sender, sendResponse) => {
+  // 可以针对sender做一些白名单检查
+  console.log("addListener:", message, sender, sendResponse)
+  // sendResponse返回响应
+
+  switch (message.type) {
+    case 'GetArxivHtml':
+      ky.get(message.msg, {}).then(
+          result => {
+            return result.text()
+
+          }
+      ).then(result => {
+
+        sendResponse({type: 'MsgFromChrome', msg: result});
+
+      }).catch(err => {
+        console.log(err);
+      });
+
+      break;
+    default:
+      break;
+  }
+
+  // if (message.type === 'MsgFromPage') {
+  //
+  // }
+  return true;
+});

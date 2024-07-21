@@ -9,45 +9,29 @@ const gitCommitURL = `${gitURL}/commit/${gitCommit}`
 
 const store = useAppStore()
 
-const name = computed(() => store.name)
-const count = computed(() => store.count)
+// const name = computed(() => store.name)
+// const count = computed(() => store.count)
+
+
+
 </script>
 
 <template>
   <div class="text-center m-4 flex flex-col gap-y-2">
     <h1 class="text-3xl font-bold underline pb-6">
-      Hello world from Popup!
+      你好我是饺子翻译
     </h1>
 
     <p>Vesion: {{ version }}</p>
     <p>Display name: {{ displayName }}</p>
 
-    <p>
-      GIT URL:
-      <a
-        class="undeline text-green-500"
-        :href="gitURL"
-      >
-        {{ gitURL }}
-      </a>
-    </p>
+    <p>未来：浏览器划词翻译</p>
+    <p>文档翻译</p>
 
-    <p>
-      GIT Commit:
-      <a
-        :href="gitCommitURL"
-        class="text-green-500"
-      >
-        (#{{ gitCommit }})
-      </a>
-    </p>
-
-    <p>Name: {{ name }}</p>
-    <p>Count: {{ count }}</p>
 
     <div class="flex gap-x-2 justify-center">
       <button
-        class="btn btn-primary"
+        class="btn btn-warning"
         @click="store.increment"
       >
         Increment
