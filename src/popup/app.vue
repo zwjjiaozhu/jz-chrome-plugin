@@ -5,7 +5,6 @@
     aria-label="Site Header"
     class="bg-gray-50"
   >
-    Popup Header66655588
   </header>
 
   <RouterView />
@@ -14,7 +13,6 @@
     aria-label="Site Footer"
     class="bg-gray-50"
   >
-    Popup Footer
   </footer>
 </template>
 

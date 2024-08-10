@@ -12,15 +12,31 @@ const store = useAppStore()
 // const name = computed(() => store.name)
 // const count = computed(() => store.count)
 
+const engine = ref("bing")
+
 
 
 </script>
 
 <template>
-  <div class="text-center m-4 flex flex-col gap-y-2">
-    <h1 class="text-3xl font-bold underline pb-6">
-      你好我是饺子翻译
-    </h1>
+  <div class="m-4 flex flex-col gap-y-2 w-80 p-2">
+    <!--    <h1 class="text-3xl font-bold underline pb-6">-->
+    <!--      你好我是饺子翻译-->
+    <!--    </h1>-->
+
+    <div class="flex justify-center" />
+
+    翻译引擎：
+    <a-select
+      v-model:value="engine"
+      style="width: 240px"
+    >
+      <a-select-option value="bing">
+        必应翻译
+      </a-select-option>
+      <a-select-option value="deepl" disabled>Deepl</a-select-option>
+      <a-select-option value="deepl" disabled>ChatGPT</a-select-option>
+    </a-select>
 
     <p>Vesion: {{ version }}</p>
     <p>Display name: {{ displayName }}</p>
@@ -28,28 +44,14 @@ const store = useAppStore()
     <p>未来：浏览器划词翻译</p>
     <p>文档翻译</p>
 
+    <a target="_blank" class="underline" rel="noopener noreferrer" href="https://jz.zwjjiaozhu.top/">About</a>
 
-    <div class="flex gap-x-2 justify-center">
-      <button
-        class="btn btn-warning"
-        @click="store.increment"
-      >
-        Increment
-      </button>
-      <button
-        class="btn btn-primary"
-        @click="store.decrement"
-      >
-        Decrement
-      </button>
-    </div>
-
-    <RouterLink
-      class="underline"
-      to="/common/about"
-    >
-      About
-    </RouterLink>
+<!--    <RouterLink-->
+<!--      class="underline"-->
+<!--      to="/common/about"-->
+<!--    >-->
+<!--      About-->
+<!--    </RouterLink>-->
   </div>
 </template>
 

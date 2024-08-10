@@ -16,7 +16,8 @@
     "types": [
       "unplugin-icons/types/vue",
       "webextension-polyfill",
-      "chrome-types"
+      "chrome-types",
+      "chrome",
     ],
     "strict": true,
     "noEmit": true,

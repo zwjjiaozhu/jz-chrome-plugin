@@ -95,6 +95,7 @@ declare global {
   const resolveRef: typeof import('@vueuse/core')['resolveRef']
   const resolveUnref: typeof import('@vueuse/core')['resolveUnref']
   const sendMessage: typeof import('webext-bridge')['sendMessage']
+  const sendMessagePromise: typeof import('../utils/index')['sendMessagePromise']
   const shallowReactive: typeof import('vue')['shallowReactive']
   const shallowReadonly: typeof import('vue')['shallowReadonly']
   const shallowRef: typeof import('vue')['shallowRef']
