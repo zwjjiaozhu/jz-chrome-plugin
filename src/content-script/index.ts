@@ -19,7 +19,9 @@ if (iframe) {
 const jzCrxExtensionId: string = import.meta.env.VITE_CRX_EXTENSION_ID
 
 const injectArxivButton = (): void => {
-    const currentUrl = window.location.href;
+    const location = window.location.href;
+    const urlObj = new URL(location)
+    const currentUrl = `${urlObj.origin}${urlObj.pathname}`
 
     // 根据URL注入不同的按钮
     if (currentUrl.includes('https://arxiv.org/abs/')) {
@@ -30,7 +32,7 @@ const injectArxivButton = (): void => {
         // 1、先判断是否有html版本的按钮
         const btnHtmlNode = document.getElementById('latexml-download-link');
         if (btnHtmlNode) {
-            addFullTextTransBtn(currentUrl);
+            addFullTextTransBtn(`${currentUrl}?atype=html`);
             return
         }
         // 2、尝试ping https://arxiv.org/html/2305.16291
@@ -45,7 +47,7 @@ const injectArxivButton = (): void => {
             const resp: respDataHttp = response;
             console.log("resp.data.status", resp.data.status);
             if (resp.data.status === 200) {
-                addFullTextTransBtn(htmlUrlExper);
+                addFullTextTransBtn(`${currentUrl}?source=html`);
                 return "success";
             }
             return sendMessagePromise(
@@ -55,7 +57,7 @@ const injectArxivButton = (): void => {
         }).then((response: any) => {
             const resp: respDataHttp = response;
             if (resp.data.status === 200) {
-                addFullTextTransBtn(htmlUrlAr5iv);
+                addFullTextTransBtn(`${currentUrl}?source=5iv`);
             }
         }).catch(() => {})
         // addFullTextTransBtn(currentUrl)
@@ -63,7 +65,7 @@ const injectArxivButton = (): void => {
     // 可以继续添加更多的条件判断
 }
 
-function addFullTextTransBtn(currentUrl: string) {
+function addFullTextTransBtn(btnUrl: string): void {
     const baseUrl = import.meta.env.VITE_WEB_BASE_URL
     // console.log('baseUrl', baseUrl)
     // 追加
@@ -71,7 +73,7 @@ function addFullTextTransBtn(currentUrl: string) {
     if (element) {
         const node = document.createElement("li")
         node.innerHTML = `
-      <a href="${baseUrl}/translate/arxiv?url=${currentUrl}" aria-describedby="download-button-info" 
+      <a href="${baseUrl}/translate/arxiv?url=${btnUrl}" aria-describedby="download-button-info" 
       accesskey="f" target="_blank" class="abs-button download-pdf">全文翻译(饺子翻译)</a>
       `
         element.appendChild(node)

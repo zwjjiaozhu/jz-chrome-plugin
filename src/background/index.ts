@@ -163,7 +163,7 @@ chrome.runtime.onMessageExternal.addListener(
         return true;
     });
 
-// 监听来自 popup 的消息
+// 监听来自扩展程序进程或者内容脚本发送来的消息
 chrome.runtime.onMessage.addListener(
     (message, sender, sendResponse): boolean => {
         console.log("onMessage:", message);
