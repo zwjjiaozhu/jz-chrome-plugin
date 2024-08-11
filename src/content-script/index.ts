@@ -1,6 +1,6 @@
 import './index.scss'
 import {sendMessagePromise} from "@/utils";
-import {respDataHttp} from "@/types/axios";
+import type {respDataHttp} from "@/types/axios";
 
 
 /* 获取一个页面，然后追加进去

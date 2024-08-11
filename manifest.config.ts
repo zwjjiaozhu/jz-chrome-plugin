@@ -37,13 +37,14 @@ export default {
   offline_enabled: false,
   host_permissions: [],
   permissions: ['storage', 'background', "contextMenus"],
+  // 用来控制外部访问插件中的资源
   web_accessible_resources: [
     {
-      matches: ['*://*/*'],
+      matches: ["*://*/*"],  // '*://*/*'
       resources: ['src/content-script/index.ts'],
     },
     {
-      matches: ['*://*/*'],
+      matches: ["*://*/*"],
       resources: ['src/content-script/iframe/index.html'],
     },
   ],
@@ -53,7 +54,8 @@ export default {
     32: 'src/assets/logo.png',
     128: 'src/assets/logo.png',
   },
+  // 允许那些扩展或者网页可以连接本扩展
   "externally_connectable": {
-    "matches": ["http://localhost:8068/\*"]
+    "matches": ["http://localhost:8068/\*", "https://jz.zwjjiaozhu.top/*"]
   },
 } as ManifestV3Export
