@@ -42,9 +42,19 @@ interface respDataHttp {
 
 
 // 创建一个 Axios 实例
-const axiosInstance = axios.create();
+const axiosInstance = axios.create({
+    // adapter: "fetch",
+    // maxRedirects: 0,
+    // validateStatus: (status: number): boolean => {
+    //     console.log("status", status);
+    //     return status !== 307;
+    // }
+});
 
-// 添加响应拦截器
+// 请求拦截器
+// axiosInstance.interceptors.request.use()
+
+// 添加响应拦截器npm i axios@
 axiosInstance.interceptors.response.use(
     response => {
         // 对响应数据做点什么
@@ -149,6 +159,10 @@ chrome.runtime.onMessageExternal.addListener(
                 messageHandlerFetch(message, sendResponse)
                 break;
             }
+            case "fetch2": {
+                messageHandlerFetch_test(message, sendResponse)
+                break;
+            }
             case constField.translate: {
                 messageHandlerTranslate(message, sendResponse)
                 break;
@@ -173,6 +187,10 @@ chrome.runtime.onMessage.addListener(
                 messageHandlerFetch(message, sendResponse);
                 break;
             }
+            case "fetch2": {
+                messageHandlerFetch_test(message, sendResponse)
+                break;
+            }
         }
         return true;
     });
@@ -181,6 +199,8 @@ chrome.runtime.onMessage.addListener(
 function messageHandlerFetch(message: any, sendResponse: any): void {
     const reqData: reqDataHttp = message
     let respData: respDataHttp;
+
+    const data2 = reqData.data
     axiosInstance.request(reqData.data).then(result => {
         respData = {type: constField.fetch, data: result}
         sendResponse(respData);
@@ -198,6 +218,35 @@ function messageHandlerFetch(message: any, sendResponse: any): void {
     //     result => {
     //         return result.text()
     //     }
+}
+
+async function messageHandlerFetch_test(message: any, sendResponse: any): void {
+    const reqData: reqDataHttp = message
+    let respData: respDataHttp;
+
+    fetch(reqData.data?.url, {method: 'HEAD', redirect: 'error', }).then(result => {
+
+        respData = {type: constField.fetch, data: {data: result.text(), status: 200}}
+        sendResponse(respData);
+    }).catch((err: Error) => {
+        // 如果发生错误，打印错误信息
+        respData = {
+            type: constField.error,
+            message: `message: ${err.message}, name: ${err.name}, `
+        }
+        sendResponse(respData);
+        return null;
+    })
+    // try {
+    //     // 使用 fetch 发送 HEAD 请求，并设置 redirect: 'manual' 来禁止重定向
+    //     const response = await ;
+    //
+    //     // 返回状态码
+    //     console.log(666, response.ok, response.headers, response.redirected);
+    // } catch (err: Error) {
+    //
+    // }
+
 }
 
 function messageHandlerTranslate(message: any, sendResponse: any): void {

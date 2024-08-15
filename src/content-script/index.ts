@@ -32,34 +32,48 @@ const injectArxivButton = (): void => {
         // 1、先判断是否有html版本的按钮
         const btnHtmlNode = document.getElementById('latexml-download-link');
         if (btnHtmlNode) {
-            addFullTextTransBtn(`${currentUrl}?atype=html`);
+            addFullTextTransBtn(`${currentUrl}?source=html`);
             return
         }
+
+        // 必须得有tex版本，不然不可能有html版本的
+        const btnTexNode = document.getElementsByClassName('download-eprint');
+        if (!btnTexNode) {
+            return
+        }
+
         // 2、尝试ping https://arxiv.org/html/2305.16291
         const htmlUrlExper = currentUrl.replace("abs", "html")
-        const htmlUrlAr5iv = currentUrl.replace("arxiv", "ar5iv")
-        console.log(htmlUrlExper, htmlUrlAr5iv);
+        const htmlUrlAr5iv = `https://ar5iv.labs.arxiv.org${urlObj.pathname.replace("abs", "html")}`;
+        // const htmlUrlAr5iv = currentUrl.replace("arxiv", "ar5iv")
+        // console.log(htmlUrlExper, htmlUrlAr5iv);
         sendMessagePromise(
             jzCrxExtensionId,
             {type: 'fetch', data: {url: htmlUrlExper, method: 'head'}}
         ).then((response: any) => {
             // const lastError = chrome.runtime.lastError;
             const resp: respDataHttp = response;
-            console.log("resp.data.status", resp.data.status);
+            // console.log("resp.data.status", resp.data.status);
             if (resp.data.status === 200) {
                 addFullTextTransBtn(`${currentUrl}?source=html`);
                 return "success";
             }
+            console.log(htmlUrlAr5iv);
             return sendMessagePromise(
                 jzCrxExtensionId,
-                {type: 'fetch', data: {url: htmlUrlAr5iv, method: 'head'}}
+                {type: 'fetch2', data: {url: htmlUrlAr5iv, method: 'head', maxRedirects: 0}}
             )
         }).then((response: any) => {
+            console.log("resp.data", response);
             const resp: respDataHttp = response;
+            // 特殊情况，访问5iv又跳回到abs页面的情况
+            // console.log("resp.location", response.data.headers);
             if (resp.data.status === 200) {
                 addFullTextTransBtn(`${currentUrl}?source=5iv`);
             }
-        }).catch(() => {})
+        }).catch((err) => {
+            console.log("fetch error:", err);
+        })
         // addFullTextTransBtn(currentUrl)
     }
     // 可以继续添加更多的条件判断

@@ -24,7 +24,7 @@
   },
   "dependencies": {
     "ant-design-vue": "4.x",
-    "axios": "^1.7.3",
+    "axios": "1.7.4",
     "dom-parser": "^1.1.5",
     "ky": "^1.4.0",
     "marked": "^13.0.2",
