@@ -2,9 +2,9 @@
   "name": "jz-translator",
   "displayName": "饺子翻译",
   "type": "module",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "private": false,
-  "description": "免费实用的科研翻译工具",
+  "description": "免费实用的科研翻译工具，支持AI翻译、划词翻译、arXiv全文翻译",
   "repository": {
     "type": "git",
     "url": "https://github.com/mubaidr/vite-vue3-chrome-extension-v3"
@@ -26,7 +26,6 @@
     "ant-design-vue": "4.x",
     "axios": "1.7.4",
     "dom-parser": "^1.1.5",
-    "ky": "^1.4.0",
     "marked": "^13.0.2",
     "pinia": "^2.1.7",
     "vue": "3.3.0",

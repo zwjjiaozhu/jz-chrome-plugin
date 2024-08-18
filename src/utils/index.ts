@@ -1,5 +1,17 @@
+import axios from "axios";
 
-export function sendMessagePromise(targetExtensionId: string, message: any) {
+export const constField = {
+    error: "error",
+    axios: "axios",
+    fetch: "fetch",
+    translate: "translate",
+    greet: "greet",  // 打招呼
+}
+
+export const axiosInstance = axios.create({})
+
+
+export const sendMessagePromise = (targetExtensionId: string, message: any) => {
     return new Promise((resolve, reject) => {
         chrome.runtime.sendMessage(targetExtensionId, message, (response: any) => {
             const lastError = chrome.runtime.lastError;

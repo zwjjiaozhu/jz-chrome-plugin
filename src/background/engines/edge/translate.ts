@@ -1,5 +1,8 @@
-import ky from "ky";
+// import ky from "ky";
+import type {AxiosRequestConfig} from "axios";
 import {userAgent} from "@/background/common";
+import {axiosInstance} from "@/utils";
+
 
 let EdgeAuth: string = "";
 const authApi: string = "https://edge.microsoft.com/translate/auth"
@@ -7,6 +10,7 @@ const translateApi: string = "https://api.cognitive.microsofttranslator.com/tran
 
 let updatedAt: number = 0
 const maxDuration: number = 500
+
 
 interface repParams {
     detectedLanguage: {
@@ -33,25 +37,32 @@ export async function translate(texts: string[], from: string, to: string): Prom
             "Text": text,
         })
     }
-
-    const options = {
-        body: JSON.stringify(array),
-        searchParams: new URLSearchParams([
-            ["from", from !== "auto" ? from : ""], // 为空自动检测
-            ["to", to],
-            ["api-version", "3.0"],
-            ["includeSentenceLength", "true"],
-        ]),
+    const apiUrl = "https://api.cognitive.microsofttranslator.com/translate"
+    const data =  JSON.stringify(array)
+    const config: AxiosRequestConfig = {
+        // params: new URLSearchParams([
+        //     ["from", ], // 为空自动检测
+        //     ["to", to],
+        //     ["api-version", "3.0"],
+        //     ["includeSentenceLength", "true"],
+        // ]),
+        params: {
+            "from": from !== "auto" ? from : "",
+            "to": to,
+            "api-version": "3.0",
+            "includeSentenceLength": "true"
+        },
         headers: {
             'content-type': 'application/json',
             'User-Agent': userAgent,
-            'Referer': "https://www.amazon.com",
-            'authorization': `Bearer ${auth}`,
+            "Referer": "https://www.amazon.com",
+            "Authorization": `Bearer ${auth}`,
         }
     }
-    return ky.post(translateApi, options).json().then((data: repParams[]) => {
+    return axiosInstance.post(apiUrl, data, config).then((response) => {
+        const resp: repParams[] = response.data
         const result: string[] = []
-        for (const item of data) {
+        for (const item of resp) {
             result.push(item.translations[0].text)
         }
         return result;
@@ -61,25 +72,25 @@ export async function translate(texts: string[], from: string, to: string): Prom
 
 async function getEdgeAuth(): Promise<string> {
 
-    const nowTime: number = new Date().getTime() / 1000
-    if (EdgeAuth !== "" && nowTime < updatedAt + maxDuration) {
+    const nowSecTime: number = new Date().getTime() / 1000
+    if (EdgeAuth !== "" && nowSecTime < updatedAt + maxDuration) {
         return EdgeAuth;
     }
 
-    const options = {
+    const config = {
         headers: {
             'content-type': 'text/html',
             'User-Agent': userAgent
         }
     }
 
-    const resp = await ky.get(authApi, options)
+    const resp = await axiosInstance.get(authApi, config)
     if (resp.status !== 200) {
         return "";
     } else {
-        EdgeAuth = await resp.text()
+        EdgeAuth = resp.data
     }
 
-    updatedAt = nowTime;
+    updatedAt = nowSecTime;
     return EdgeAuth;
 }

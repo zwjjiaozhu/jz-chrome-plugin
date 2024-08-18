@@ -1,6 +1,6 @@
 import './index.scss'
 import {sendMessagePromise} from "@/utils";
-import type {respDataHttp} from "@/types/axios";
+import type {httpRespParams} from "@/types/arxiv";
 
 
 /* 获取一个页面，然后追加进去
@@ -18,7 +18,7 @@ if (iframe) {
 
 const jzCrxExtensionId: string = import.meta.env.VITE_CRX_EXTENSION_ID
 
-const injectArxivButton = (): void => {
+const arxivInjectButton = (): void => {
     const location = window.location.href;
     const urlObj = new URL(location)
     const currentUrl = `${urlObj.origin}${urlObj.pathname}`
@@ -32,6 +32,7 @@ const injectArxivButton = (): void => {
         // 1、先判断是否有html版本的按钮
         const btnHtmlNode = document.getElementById('latexml-download-link');
         if (btnHtmlNode) {
+            // const href = btnHtmlNode.getAttribute("href")
             addFullTextTransBtn(`${currentUrl}?source=html`);
             return
         }
@@ -49,26 +50,26 @@ const injectArxivButton = (): void => {
         // console.log(htmlUrlExper, htmlUrlAr5iv);
         sendMessagePromise(
             jzCrxExtensionId,
-            {type: 'fetch', data: {url: htmlUrlExper, method: 'head'}}
+            {type: 'axios', data: {url: htmlUrlExper, method: 'head'}}
         ).then((response: any) => {
             // const lastError = chrome.runtime.lastError;
-            const resp: respDataHttp = response;
+            const resp: httpRespParams = response;
             // console.log("resp.data.status", resp.data.status);
-            if (resp.data.status === 200) {
+            if (resp.data?.status === 200) {
                 addFullTextTransBtn(`${currentUrl}?source=html`);
                 return "success";
             }
             console.log(htmlUrlAr5iv);
             return sendMessagePromise(
                 jzCrxExtensionId,
-                {type: 'fetch2', data: {url: htmlUrlAr5iv, method: 'head', maxRedirects: 0}}
+                {type: 'fetch', data: {url: htmlUrlAr5iv, method: 'head', maxRedirects: 0}}
             )
         }).then((response: any) => {
             console.log("resp.data", response);
-            const resp: respDataHttp = response;
+            const resp: httpRespParams = response;
             // 特殊情况，访问5iv又跳回到abs页面的情况
             // console.log("resp.location", response.data.headers);
-            if (resp.data.status === 200) {
+            if (resp.data?.status === 200) {
                 addFullTextTransBtn(`${currentUrl}?source=5iv`);
             }
         }).catch((err) => {
@@ -94,14 +95,14 @@ function addFullTextTransBtn(btnUrl: string): void {
     }
 }
 
-console.log("content-script")
+// console.log("content-script")
 // 针对arxiv 注册一个按钮，一键开启双语
 // content.js
 if (document.readyState !== 'loading') {
-    injectArxivButton()
+    arxivInjectButton()
 } else {
     document.addEventListener('DOMContentLoaded', () => {
-        injectArxivButton()
+        arxivInjectButton()
     })
 }
 
