@@ -95,15 +95,19 @@ function addFullTextTransBtn(btnUrl: string): void {
     }
 }
 
-// console.log("content-script")
+console.log("content-script")
+// console.log(document.readyState)
 // 针对arxiv 注册一个按钮，一键开启双语
 // content.js
-if (document.readyState !== 'loading') {
+if (document.readyState === 'complete') {
     arxivInjectButton()
 } else {
-    document.addEventListener('DOMContentLoaded', () => {
-        arxivInjectButton()
-    })
+    window.onload = () => {
+        arxivInjectButton();
+    };
+    // document.addEventListener('DOMContentLoaded', () => {
+    //     arxivInjectButton()
+    // })
 }
 
 globalThis.onerror = function (message, source, lineno, colno, error) {

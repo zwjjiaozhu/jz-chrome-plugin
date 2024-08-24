@@ -2,7 +2,7 @@
   "name": "jz-translator",
   "displayName": "饺子翻译",
   "type": "module",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "private": false,
   "description": "免费实用的科研翻译工具，支持AI翻译、划词翻译、arXiv全文翻译",
   "repository": {
