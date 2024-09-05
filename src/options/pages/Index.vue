@@ -5,7 +5,6 @@
     <h1 class="text-3xl font-bold underline pb-6">
       Hello world from Options!
     </h1>
-
     <RouterLink to="/common/about">
       About
     </RouterLink>

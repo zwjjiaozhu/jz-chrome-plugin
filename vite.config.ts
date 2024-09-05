@@ -10,6 +10,7 @@ import Pages from 'vite-plugin-pages'
 import { defineViteConfig as define } from './define.config'
 
 // https://vitejs.dev/config/
+
 export default defineConfig({
   resolve: {
     alias: {
@@ -17,6 +18,7 @@ export default defineConfig({
       '~': fileURLToPath(new URL('./src', import.meta.url)),
       src: fileURLToPath(new URL('./src', import.meta.url)),
     },
+    // chrome-extension://nhpffibbppdgbljalgkmmdceckjeimga/settings
   },
   plugins: [
     vue(),

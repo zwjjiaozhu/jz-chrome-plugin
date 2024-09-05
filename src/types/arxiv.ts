@@ -23,7 +23,8 @@ export interface arxivTransReqItemParams {
     text: string,
     from: string,
     to: string,
-    rootId: string,  // 节点的所在块（p、h1、等 ）的id
+    engine?: string,  // 引擎
+    rootId: string,   // 节点的所在块（p、h1、等 ）的id
     nodeId: string,
 }
 

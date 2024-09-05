@@ -1,15 +1,13 @@
 // import ky from 'ky';
-import type {AxiosError, AxiosRequestConfig, AxiosResponse} from "axios";
+import type {AxiosError, } from "axios";
 import axios from "axios";
 
-import {translate as edgeTranslate} from "@/background/engines/edge/translate";
+// import {translate as edgeTranslate} from "@/background/engines/edge/translate";
+import {translate as googleBrowserTranslate} from "@/background/engines/google/browserV2";
 import {constField} from "@/utils";
-import {arxivTransReqParams, arxivTransRespParams, httpReqParams, httpRespParams} from "@/types/arxiv";
-// import fetchAdapter from "@vespaiach/axios-fetch-adapter";
+import type {arxivTransReqParams, arxivTransRespParams, httpReqParams, httpRespParams} from "@/types/arxiv";
 
-// import { parseFromString } from 'dom-parser';
 const axiosInstance = axios.create({})
-
 
 interface transRepParams {
     text: string,
@@ -17,23 +15,11 @@ interface transRepParams {
     nodeId: string,
 }
 
-interface reqDataHttp {
-    type: string;
-    data: AxiosRequestConfig
-}
-
-interface respDataHttp {
-    type: string;
-    message?: string;
-    data?: AxiosResponse
-}
-
-
 
 // 请求拦截器
 // requests.interceptors.request.use()
 
-// 添加响应拦截器npm i axios@
+// 添加响应拦截器
 axiosInstance.interceptors.response.use(
     response => {
         // 对响应数据做点什么
@@ -60,8 +46,7 @@ chrome.runtime.onInstalled.addListener(async (opt) => {
     // opt.reason === 'update' // If extension is updated.
     if (opt.reason === 'install') {
         await chrome.storage.local.clear()
-
-        chrome.tabs.create({
+        await chrome.tabs.create({
             active: true,
             // Open the setup page and append `?type=install` to the URL so frontend
             // can know if we need to show the install page or update page.
@@ -70,7 +55,7 @@ chrome.runtime.onInstalled.addListener(async (opt) => {
     }
 
     if (opt.reason === 'update') {
-        chrome.tabs.create({
+        await chrome.tabs.create({
             active: true,
             url: chrome.runtime.getURL('./src/setup/index.html?type=update'),
         })
@@ -147,7 +132,7 @@ chrome.runtime.onMessageExternal.addListener(
                 break;
             }
             case constField.greet: {
-                sendResponse({})
+                sendResponse({msg: "success"})
                 break;
             }
             default:
@@ -201,14 +186,17 @@ function messageHandlerAxios(message: any, sendResponse: any): void {
     });
 }
 
-async function messageHandlerFetch(message: any, sendResponse: any): void {
+function messageHandlerFetch(message: any, sendResponse: any): void {
     const reqData: httpReqParams = message
     let respData: httpRespParams
 
     const url_ = reqData.data?.url || ""
     fetch(url_, {method: 'HEAD', redirect: 'error', }).then(result => {
-        respData = {type: constField.axios, data: {data: result.text(), status: 200}}
+        respData = {type: constField.axios, data: {
+            data: result.text(), status: 200, headers: {}, statusText: "", config: {headers: {}}
+        }}
         sendResponse(respData);
+        return null;
     }).catch((err: Error) => {
         // 如果发生错误，打印错误信息
         respData = {
@@ -239,7 +227,8 @@ function messageHandlerTranslate(message: any, sendResponse: any): void {
     for (const item of data) {
         texts.push(item.text)
     }
-    edgeTranslate(texts, data[0].from, data[0].to).then((result: string[]) => {
+
+    googleBrowserTranslate(texts, data[0].from, data[0].to).then((result: string[]) => {
         const textArray: transRepParams[] = []
         for (const [index, value] of result.entries()) {
             textArray.push({

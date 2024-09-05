@@ -34,6 +34,11 @@ export default {
       run_at: 'document_end',
     },
   ],
+  options_page: "src/options/index.html",  // 右键crx图标时，菜单中的”选项设置“链接
+  options_ui: {                            // 可以在新开网页打开设置页面
+    page: "src/options/index.html",
+    open_in_tab: true                      // 可选，如果设置为true，选项页面将在新的标签页中打开
+  },
   offline_enabled: false,
   host_permissions: [],
   permissions: ['storage', 'background', "contextMenus"],

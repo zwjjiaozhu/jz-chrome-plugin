@@ -32,7 +32,8 @@
     "src/**/*.ts",
     "src/**/*.d.ts",
     "src/**/*.tsx",
-    "src/**/*.vue"
+    "src/**/*.vue",
+    "node_modules/.pnpm/unplugin-auto-import@0.18.2_@vueuse+core@10.11.0/node_modules/unplugin-auto-import/auto-imports.d.ts"
   ]
   // "references": [
   //   {

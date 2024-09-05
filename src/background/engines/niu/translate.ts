@@ -1,4 +1,4 @@
-import ky from "ky";
+// import ky from "ky";
 
 
 async function niuTranslate(text: string, from: string, to: string): Promise<string> {
