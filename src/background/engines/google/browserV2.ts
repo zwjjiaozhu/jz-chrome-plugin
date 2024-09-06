@@ -2,7 +2,7 @@ import type {AxiosRequestConfig} from "axios";
 import {userAgent} from "@/background/common";
 import {axiosInstance} from "@/utils";
 
-const translateApi: string = "https://translate-pa.googleapis.com/v1/translateHtml"
+const transApi: string = "https://translate-pa.googleapis.com/v1/translateHtml"
 
 
 type respParams = [
@@ -27,7 +27,7 @@ export async function translate(texts: string[], from: string, to: string): Prom
         timeout: 10000,
     }
 
-    return axiosInstance.post(translateApi, data, config).then((response) => {
+    return axiosInstance.post(transApi, data, config).then((response) => {
         const resp: respParams = response.data
         const tlTextGroup: string[] = resp[0]
         const result: string[] = []

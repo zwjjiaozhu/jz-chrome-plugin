@@ -2,10 +2,12 @@
 import type {AxiosError, } from "axios";
 import axios from "axios";
 
-// import {translate as edgeTranslate} from "@/background/engines/edge/translate";
-import {translate as googleBrowserTranslate} from "@/background/engines/google/browserV2";
+import {translate as edgeTranslate} from "@/background/engines/edge/translate";
+import {translate as googleBrowserTransV2} from "@/background/engines/google/browserV2";
+import {translate as googleBrowserTransV1} from "@/background/engines/google/browserV1";
 import {constField} from "@/utils";
 import type {arxivTransReqParams, arxivTransRespParams, httpReqParams, httpRespParams} from "@/types/arxiv";
+import {crxConfig, initConfig} from "@/config/config-manger";
 
 const axiosInstance = axios.create({})
 
@@ -15,6 +17,10 @@ interface transRepParams {
     nodeId: string,
 }
 
+// 必须初始化config，不然是初始状态
+initConfig().then(() => {
+
+})
 
 // 请求拦截器
 // requests.interceptors.request.use()
@@ -193,7 +199,9 @@ function messageHandlerFetch(message: any, sendResponse: any): void {
     const url_ = reqData.data?.url || ""
     fetch(url_, {method: 'HEAD', redirect: 'error', }).then(result => {
         respData = {type: constField.axios, data: {
-            data: result.text(), status: 200, headers: {}, statusText: "", config: {headers: {}}
+            data: result.text(), status: 200, headers: {},
+                statusText: "", config: {headers: {}
+            }
         }}
         sendResponse(respData);
         return null;
@@ -218,6 +226,8 @@ function messageHandlerFetch(message: any, sendResponse: any): void {
 
 }
 
+type translateHandler = (texts: string[], from: string, to: string) => Promise<string[]>;
+
 function messageHandlerTranslate(message: any, sendResponse: any): void {
     const reqData: arxivTransReqParams = message
     let respData: arxivTransRespParams;
@@ -228,7 +238,27 @@ function messageHandlerTranslate(message: any, sendResponse: any): void {
         texts.push(item.text)
     }
 
-    googleBrowserTranslate(texts, data[0].from, data[0].to).then((result: string[]) => {
+    let handler: translateHandler;
+    console.log("crxConfig.transEngine:", crxConfig)
+    switch (crxConfig.transEngine) {
+        case "bing":
+            handler = edgeTranslate
+            break;
+        case "google":
+            switch (crxConfig.google.source) {
+                case "360":
+                    handler = googleBrowserTransV1
+                    break
+                case "browserV2":
+                    handler = googleBrowserTransV2
+                    break
+            }
+            break;
+        default:
+            handler = edgeTranslate
+    }
+
+    handler(texts, data[0].from, data[0].to).then((result: string[]) => {
         const textArray: transRepParams[] = []
         for (const [index, value] of result.entries()) {
             textArray.push({

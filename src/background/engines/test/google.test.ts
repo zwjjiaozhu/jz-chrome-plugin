@@ -28,13 +28,13 @@ it('translate: google: apiBrowser', async () => {
 
 it('translate: 360: apiBrowser', async () => {
     expect(
-        translateV1(
+        await translateV1(
             ["Photo shows a hot air balloon in Wanjiang town, Ningyuan county of central China&#39;s Hunan Province." +
             " The county actively leverages the natural ecological landscape and uniquely advantageous airspace" +
             " conditions to introduce hot air balloon projects, aiming to create an internationally competitive hot air balloon flight base. (Photo/Cai Xiaoping)",
                 "test",
             ],
 
-            "auto", "")
-    )
+            "auto", "").then((result: string[]) => {return result})
+    ).toBe(10)
 })

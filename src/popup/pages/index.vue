@@ -20,7 +20,7 @@ const options = {
   google: {
     sourceOptions: [
       { label: '原生浏览器接口', value: 'browserV2' },
-      { label: '360', value: '360' }
+      { label: '360（些许延迟）', value: '360' }
     ]
   }
 }

@@ -1,7 +1,7 @@
 import './index.scss'
 import {sendMessagePromise} from "@/utils";
 import type {httpRespParams} from "@/types/arxiv";
-import {getConfig, updateConfig} from "@/config/config-manger";
+// import {getConfig, updateConfig} from "@/config/config-manger";
 
 
 /* 获取一个页面，然后追加进去
@@ -16,8 +16,7 @@ if (iframe) {
   document.body?.append(iframe)
 }
  */
-getConfig()
-updateConfig({})
+//
 
 const jzCrxExtensionId: string = import.meta.env.VITE_CRX_EXTENSION_ID
 

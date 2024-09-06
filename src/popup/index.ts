@@ -21,7 +21,7 @@ const router = createRouter({
 })
 
 createApp(App).use(Antd).use(router).use(createPinia()).mount('#app')
-
+// chrome.scripting.executeScript()
 // console.log(router.getRoutes())
 
 self.onerror = function (message, source, lineno, colno, error) {

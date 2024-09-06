@@ -1,9 +1,9 @@
 {
   "compilerOptions": {
     "incremental": true,
-    "target": "ES6",
+    "target": "ES2016",
     "jsx": "preserve",
-    "lib": ["ES6", "DOM"],
+    "lib": ["ES2016", "DOM"],
     "useDefineForClassFields": true,
     "module": "ESNext",
     "moduleResolution": "Bundler",
@@ -33,7 +33,7 @@
     "src/**/*.d.ts",
     "src/**/*.tsx",
     "src/**/*.vue",
-    "node_modules/.pnpm/unplugin-auto-import@0.18.2_@vueuse+core@10.11.0/node_modules/unplugin-auto-import/auto-imports.d.ts"
+//    "node_modules/.pnpm/unplugin-auto-import@0.18.2_@vueuse+core@10.11.0/node_modules/unplugin-auto-import/auto-imports.d.ts"
   ]
   // "references": [
   //   {

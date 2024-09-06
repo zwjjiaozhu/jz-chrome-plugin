@@ -1,7 +1,7 @@
 import { dirname, relative } from 'node:path'
 import { URL, fileURLToPath } from 'node:url'
 import vue from '@vitejs/plugin-vue'
-import AutoImport from 'unplugin-auto-import/vite'
+// import AutoImport from 'unplugin-auto-import/vite'
 import IconsResolver from 'unplugin-icons/resolver'
 import Icons from 'unplugin-icons/vite'
 import Components from 'unplugin-vue-components/vite'
@@ -47,11 +47,11 @@ export default defineConfig({
       ],
     }),
 
-    AutoImport({
-      imports: ['vue', 'vue-router', 'vue/macros', '@vueuse/core'],
-      dts: 'src/types/auto-imports.d.ts',
-      dirs: ['src/composables/', 'src/stores/', 'src/utils/'],
-    }),
+    // AutoImport({
+    //   imports: ['vue', 'vue-router', 'vue/macros', '@vueuse/core'],
+    //   dts: 'src/types/auto-imports.d.ts',
+    //   dirs: ['src/composables/', 'src/stores/', 'src/utils/'],
+    // }),
 
     // https://github.com/antfu/unplugin-vue-components
     Components({
